@@ -1,124 +1,121 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import Seo from "./components/Seo";
+import styled from "styled-components";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
-const inter = Inter({ subsets: ['latin'] })
+export default function Home({ results }) {
+  // navigate 하는 방법 2가지
+  // 1) Link
+  // 2) onClick : 유저가 form 제출하고 나면 코드를 통해 자동으로 유저를 navigating
 
-export default function Home() {
+  const router = useRouter();
+  const onClick = (id, title) => {
+    router.push(
+      // url
+      {
+        pathname: `/movies/${title}/${id}`,
+        // url 이동이 됨
+        query: { id, title },
+      },
+      // as 사용해서 url 숨김 (쿼리문 형식으로 말고, 내가 원하는 형식으로)
+      `/movies/${title}/${id}`,
+
+      // // url
+      // {
+      //   pathname: `/movies/${title}/${id}`,
+      //   query: {
+      //     title,
+      //   },
+      // },
+      // // as 사용해서 url 숨김
+      // `/movies/${id}`,
+    );
+  };
+  // useEffect(
+  //   () => {
+  //     (async () => {
+  //       setMovies(results);
+  //     })();
+  //   },
+
+  // async () => {
+  //   const response = await fetch(
+  //     `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`,
+  //   );
+  //   const json = await response.json();
+  // },
+  // [],
+  // );
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">pages/index.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <Container className="container">
+      {/* <Head>
+        <title>Home | Next Movies</title>
+      </Head> */}
+      <Seo title="Home" />
+      {/* {!movies && <h4>Loading...</h4>} */}
+      {results?.map((movie) => (
+        <div
+          onClick={() => onClick(movie.id, movie.original_title)}
+          className="movie"
+          key={movie.id}
+        >
+          <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} />
+          <Link href={`/movies/${movie.original_title}/${movie.id}`}>
+            <h4>{movie.original_title}</h4>
+          </Link>
         </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      ))}
+    </Container>
+  );
 }
+
+// 1) CSR : Loading 화면 보여준 다음에 데이터를 받음. => navbar, footer, 가운데 loading
+
+// 2) SSR (데이터가 유효할 때, 화면이 보여지게 됨) => loading 화면 없이 API가 완료되도록 기다린 후에 모든 정보를 보여줌
+// 더이상 페이지에 loading은 없고, 영화정보는 전부 reactJS가 아닌 HTML로 보여줌.
+// nextJS가 자동으로 props들을 넣어주고, reactJS가 props를 받아다가 흡수(hydrate) !
+//? getServerSideProps 에서 API를 fetch 해옴.
+export async function getServerSideProps() {
+  // 오직 백엔드에서만 실행됨.
+  const { results } = await (
+    await fetch(`http://localhost:3000/api/movies`)
+  ).json();
+  return {
+    props: {
+      results,
+    },
+  };
+}
+
+// /movies/:id(변수) ===> react DOM 에서 처리하는 방식
+
+// library : 너가 개발자로서 사용하는 것 => 우리가 원할 때 부르고 사용하고 싶을 때 사용 (react.js) --- ReactDOM.render 존재
+// framework : 너의 코드를 불러오는 것 => 집 같은 것. 모든 것을 동작하게 함, 특정 rule을 따라야 함. 규칙을 따라서 코드가 있어야 하는 곳에 잘 두면 됨.
+//            - 내가 코드를 적절한 곳에 넣어야 함, 수정 못함. (nextjs) --- ReactDOM.render 저어어... 깊은 곳에 존재할 것 (추상화 시켜서, 직접 접근은 못하지만...)
+
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 20px;
+  gap: 20px;
+
+  .movie {
+    cursor: pointer;
+  }
+
+  .movie img {
+    max-width: 100%;
+    border-radius: 12px;
+    transition: transform 0.2s ease-in-out;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  }
+
+  .movie:hover img {
+    transform: scale(1.05) translateY(-10px);
+  }
+
+  .movie h4 {
+    font-size: 18px;
+    text-align: center;
+  }
+`;
